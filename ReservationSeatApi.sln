@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeatReservationApi", "SeatReservationApi\SeatReservationApi.csproj", "{8F609993-ADC2-47AE-B539-031C7FEEB87B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeatReservation.Domain", "SeatReservation.Domain\SeatReservation.Domain.csproj", "{C9E7894D-D540-4138-ABD5-ABF969CB0CD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{EBDADB51-8C0A-4D0D-98D9-17A807FB38A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeatReservation.Infrastructure.Postgre", "SeatReservation.Infrastructure.Postgre\SeatReservation.Infrastructure.Postgre.csproj", "{AD046A84-A9C1-48AD-B23F-052D3424A3D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeatReservation.Application", "SeatReservation.Application\SeatReservation.Application.csproj", "{2C52242E-480F-4280-AD3F-96776BBCB4B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeatReservation.Contracts", "SeatReservation.Contracts\SeatReservation.Contracts.csproj", "{A2D46E26-69DB-4368-8FC1-8478FAC214BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F609993-ADC2-47AE-B539-031C7FEEB87B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F609993-ADC2-47AE-B539-031C7FEEB87B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F609993-ADC2-47AE-B539-031C7FEEB87B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F609993-ADC2-47AE-B539-031C7FEEB87B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9E7894D-D540-4138-ABD5-ABF969CB0CD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9E7894D-D540-4138-ABD5-ABF969CB0CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9E7894D-D540-4138-ABD5-ABF969CB0CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9E7894D-D540-4138-ABD5-ABF969CB0CD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBDADB51-8C0A-4D0D-98D9-17A807FB38A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBDADB51-8C0A-4D0D-98D9-17A807FB38A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBDADB51-8C0A-4D0D-98D9-17A807FB38A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBDADB51-8C0A-4D0D-98D9-17A807FB38A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD046A84-A9C1-48AD-B23F-052D3424A3D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD046A84-A9C1-48AD-B23F-052D3424A3D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD046A84-A9C1-48AD-B23F-052D3424A3D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD046A84-A9C1-48AD-B23F-052D3424A3D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C52242E-480F-4280-AD3F-96776BBCB4B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C52242E-480F-4280-AD3F-96776BBCB4B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C52242E-480F-4280-AD3F-96776BBCB4B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C52242E-480F-4280-AD3F-96776BBCB4B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2D46E26-69DB-4368-8FC1-8478FAC214BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2D46E26-69DB-4368-8FC1-8478FAC214BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2D46E26-69DB-4368-8FC1-8478FAC214BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2D46E26-69DB-4368-8FC1-8478FAC214BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
