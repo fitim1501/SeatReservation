@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SeatReservation.Application;
 using SeatReservation.Domain.Venues;
+using Shared;
+using Shared.EndpointsResults;
 
 namespace SeatReservationApi.Controllers;
 
@@ -9,13 +11,13 @@ namespace SeatReservationApi.Controllers;
 public class VenuesController : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult> CreateVenue(
+    [ProducesResponseType<Envelope<Guid>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<Envelope>(StatusCodes.Status302Found)]
+    public async Task<EndpointResult<Guid>> CreateVenue(
         [FromServices] CreateVenueHandler handler, 
         [FromBody] CreateVenueRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await handler.Handle(request, cancellationToken);
-        
-        return result.Value;
+        return await handler.Handle(request, cancellationToken);
     }
 }

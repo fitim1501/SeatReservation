@@ -29,8 +29,21 @@ public class EndpointResult<TValue> : IResult, IEndpointMetadataProvider
     
     public static implicit operator EndpointResult<TValue>(Result<TValue, Error> result) => new(result);
     
+    public static implicit operator EndpointResult<TValue>(Result<TValue, Errors> result) => new(result);
+    
     public static void PopulateMetadata(MethodInfo method, EndpointBuilder builder)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(method);
+        ArgumentNullException.ThrowIfNull(builder);
+        
+        var statusCodes = new[] { 200, 400, 401, 403, 404, 409, 500 };
+        
+        foreach (var statusCode in statusCodes)
+        {
+            builder.Metadata.Add(new ProducesResponseTypeMetadata(
+                statusCode, 
+                typeof(Envelope<TValue>), 
+                ["application/json"]));
+        }
     }
 }
