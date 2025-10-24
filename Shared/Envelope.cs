@@ -36,7 +36,7 @@ public record Envelope<T>
     public bool IsError => ErrorList != null || (ErrorList != null && ErrorList.Any());
 
     public DateTime TimeGenerated { get; }
-    
+
     [JsonConstructor]
     public Envelope(T? result, Errors? errorList)
     {

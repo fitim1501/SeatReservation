@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using SeatReservation.Application;
 using SeatReservation.Application.DataBase;
 using SeatReservation.Domain;
 using SeatReservation.Domain.Events;
@@ -9,7 +10,6 @@ using EventId = SeatReservation.Domain.Events.EventId;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 builder.Services.AddOpenApi(options =>
 {
     options.AddSchemaTransformer((schema, context, _) =>
@@ -30,8 +30,12 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-builder.Services.AddScoped<IReservationServiceDbContext, ReservertionServiceDbContext>(_ => 
-    new ReservertionServiceDbContext(builder.Configuration.GetConnectionString("ReservationServiceDb")!));
+builder.Services.AddControllers();
+
+builder.Services.AddScoped<IReservationServiceDbContext, ReservationServiceDbContext>(_ =>
+    new ReservationServiceDbContext(builder.Configuration.GetConnectionString("ReservationServiceDb")!));
+
+builder.Services.AddScoped<CreateVenueHandler>();
 
 var app = builder.Build();
 

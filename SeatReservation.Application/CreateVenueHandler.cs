@@ -7,12 +7,12 @@ namespace SeatReservation.Application;
 
 public class CreateVenueHandler
 {
-    private readonly IReservationServiceDbContext _dbContext;
-
-    public CreateVenueHandler(IReservationServiceDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    // private readonly IReservationServiceDbContext _dbContext;
+    //
+    // public CreateVenueHandler(IReservationServiceDbContext dbContext)
+    // {
+    //     _dbContext = dbContext;
+    // }
     /// <summary>
     /// Этот метод создает площадку со всеми местами.
     /// </summary>
@@ -37,9 +37,9 @@ public class CreateVenueHandler
 
         // сохранение доменных моделей в базу данных
 
-        await _dbContext.Venues.AddAsync(venue.Value, cancellationToken);
-
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        // await _dbContext.Venues.AddAsync(venue.Value, cancellationToken);
+        //
+        // await _dbContext.SaveChangesAsync(cancellationToken);
 
         return venue.Value.Id.Value;
     }

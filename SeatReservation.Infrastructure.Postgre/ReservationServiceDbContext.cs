@@ -8,11 +8,11 @@ using SeatReservation.Domain.Venues;
 
 namespace SeatReservation.Infrastructure.Postgre;
 
-public class ReservertionServiceDbContext : DbContext, IReservationServiceDbContext
+public class ReservationServiceDbContext : DbContext, IReservationServiceDbContext
 {
     private readonly string _connectionString;
 
-    public ReservertionServiceDbContext(string connectionString)
+    public ReservationServiceDbContext(string connectionString)
     {
         _connectionString = connectionString;
     }
@@ -23,7 +23,7 @@ public class ReservertionServiceDbContext : DbContext, IReservationServiceDbCont
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ReservertionServiceDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ReservationServiceDbContext).Assembly);
     }
 
     public DbSet<Venue> Venues => Set<Venue>();
