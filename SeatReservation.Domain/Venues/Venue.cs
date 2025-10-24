@@ -30,8 +30,6 @@ public class Venue
     public int SeatsLimit { get; private set; }
     public int SeatsCount => _seats.Count();
     
-    public string Test2 { get; set; }
-
     public IReadOnlyList<Seat> Seats => _seats;
     
     public UnitResult<Error> AddSeat(Seat seat)

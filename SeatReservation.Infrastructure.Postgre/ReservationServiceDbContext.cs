@@ -19,6 +19,8 @@ public class ReservationServiceDbContext : DbContext, IReservationServiceDbConte
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_connectionString);
+        
+        optionsBuilder.
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
