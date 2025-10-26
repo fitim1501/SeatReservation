@@ -15,17 +15,16 @@ public class Venue
         
     }
 
-    public Venue(VenueId id, VenueName name, int seatsLimit, IEnumerable<Seat> seats)
+    public Venue(VenueId id, VenueName name, int seatsLimit)
     {
         Id = id;
         Name = name;
         this.SeatsLimit = seatsLimit;
-        _seats = seats.ToList();
     }
 
     public VenueId Id { get; } = null!;
-    
-    public VenueName Name { get; private set; }
+
+    public VenueName Name { get; private set; } = null!;
    
     public int SeatsLimit { get; private set; }
     public int SeatsCount => _seats.Count();
@@ -44,13 +43,26 @@ public class Venue
         return UnitResult.Success<Error>();
     }
     
+    public void AddSeats(IEnumerable<Seat> seats) => _seats.AddRange(seats);
+
+    public UnitResult<Error> UpdateName(string name)
+    {
+        var newVenueName = VenueName.Create(Name.Prefix, name);
+        if (newVenueName.IsFailure)
+        {
+            return newVenueName.Error;
+        }
+        
+        Name =  newVenueName.Value;
+        
+        return UnitResult.Success<Error>();
+    }
     public void ExpandSeatsLimit(int newSeatsLimit) => SeatsLimit = newSeatsLimit;
 
     public static Result<Venue, Error> Create(
         string prefix,
         string name,
-        int seatsLimit,
-        IEnumerable<Seat> seats
+        int seatsLimit
         )
     {
         if (seatsLimit <= 0)
@@ -64,18 +76,18 @@ public class Venue
             return venueNameResult.Error;
         }
 
-        var venueSeats = seats.ToList();
-
-        if (venueSeats.Count < 1)
-        {
-            return Error.Validation("venue.seats.limit", "Seats limit must be greater than or equal to the number of seats");
-        }
+        // var venueSeats = seats.ToList();
+        //
+        // if (venueSeats.Count < 1)
+        // {
+        //     return Error.Validation("venue.seats.limit", "Seats limit must be greater than or equal to the number of seats");
+        // }
+        //
+        // if (venueSeats.Count > seatsLimit)
+        // {
+        //     return Error.Validation("venue.seats.limit", "Seats limit must be greater than or equal to the number of seats");
+        // }
         
-        if (venueSeats.Count > seatsLimit)
-        {
-            return Error.Validation("venue.seats.limit", "Seats limit must be greater than or equal to the number of seats");
-        }
-        
-        return new Venue(new VenueId(Guid.NewGuid()), venueNameResult.Value, seatsLimit, venueSeats);
+        return new Venue(new VenueId(Guid.NewGuid()), venueNameResult.Value, seatsLimit);
     }
 }

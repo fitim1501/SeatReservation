@@ -8,7 +8,7 @@ using SeatReservation.Domain.Venues;
 
 namespace SeatReservation.Infrastructure.Postgre;
 
-public class ReservationServiceDbContext : DbContext, IReservationServiceDbContext
+public class ReservationServiceDbContext : DbContext
 {
     private readonly string _connectionString;
 
@@ -19,8 +19,10 @@ public class ReservationServiceDbContext : DbContext, IReservationServiceDbConte
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseNpgsql(_connectionString);
-        
-        optionsBuilder.
+
+        optionsBuilder.EnableDetailedErrors();
+        optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +34,7 @@ public class ReservationServiceDbContext : DbContext, IReservationServiceDbConte
     
     public DbSet<User> Users => Set<User>();
 
-    // private ILoggerFactory CreateLoggerFactory() =>
-    //     LoggerFactory.Create(builder => { builder.AddConsole();});
+    private ILoggerFactory CreateLoggerFactory() =>
+        LoggerFactory.Create(builder => { builder.AddConsole();});
 
 }

@@ -16,7 +16,7 @@ public record VenueName
     public string Name { get; }
     
     public override string ToString() => $"{Prefix}-{Name}";
-
+    
     public static Result<VenueName, Error> Create(string prefix, string name)
     {
         if (string.IsNullOrWhiteSpace(prefix) || string.IsNullOrWhiteSpace(name))

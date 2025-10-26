@@ -1,12 +1,11 @@
 using Microsoft.OpenApi.Models;
 using SeatReservation.Application;
 using SeatReservation.Application.DataBase;
-using SeatReservation.Domain;
-using SeatReservation.Domain.Events;
-using SeatReservation.Domain.Venues;
+using SeatReservation.Application.Venues;
 using SeatReservation.Infrastructure.Postgre;
+using SeatReservation.Infrastructure.Postgre.Database;
+using SeatReservation.Infrastructure.Postgre.Repositories;
 using Shared;
-using EventId = SeatReservation.Domain.Events.EventId;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,10 +31,17 @@ builder.Services.AddOpenApi(options =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<IReservationServiceDbContext, ReservationServiceDbContext>(_ =>
+builder.Services.AddScoped<ReservationServiceDbContext>(_ =>
     new ReservationServiceDbContext(builder.Configuration.GetConnectionString("ReservationServiceDb")!));
 
+builder.Services.AddSingleton<IDbConnectionFactory, NpgsqlConnectionFactory>();
+
+// builder.Services.AddScoped<IVenuesRepository, NpgSqlVenuesRepository>();
+builder.Services.AddScoped<IVenuesRepository, EfCoreVenuesRepository>();
+
 builder.Services.AddScoped<CreateVenueHandler>();
+builder.Services.AddScoped<UpdateVenueNameHandler>();
+builder.Services.AddScoped<UpdateVenueNameByPrefixHandler>();
 
 var app = builder.Build();
 

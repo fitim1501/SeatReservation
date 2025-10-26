@@ -1,17 +1,18 @@
 ﻿using CSharpFunctionalExtensions;
 using SeatReservation.Application.DataBase;
+using SeatReservation.Contracts;
 using SeatReservation.Domain.Venues;
 using Shared;
 
-namespace SeatReservation.Application;
+namespace SeatReservation.Application.Venues;
 
 public class CreateVenueHandler
 {
-    private readonly IReservationServiceDbContext _dbContext;
+    private readonly IVenuesRepository _venuesRepository;
     
-    public CreateVenueHandler(IReservationServiceDbContext dbContext)
+    public CreateVenueHandler(IVenuesRepository venuesRepository)
     {
-        _dbContext = dbContext;
+        _venuesRepository = venuesRepository;
     }
     /// <summary>
     /// Этот метод создает площадку со всеми местами.
@@ -21,10 +22,19 @@ public class CreateVenueHandler
         // бизнес валидация
         
         // создание доменных моделей
+
+        var venue = Venue.Create(request.Prefix, request.Name, request.SeatsLimit);
+        if (venue.IsFailure)
+        {
+            return venue.Error;
+        }
+
+        //сохранение доменных моделей в базу данных
+        
         List<Seat> seats = [];
         foreach (var seatRequest in  request.Seats)
         {
-            var seat = Seat.Create(seatRequest.RowNumber, seatRequest.SeatNumber);
+            var seat = Seat.Create(venue.Value, seatRequest.RowNumber, seatRequest.SeatNumber);
             if (seat.IsFailure)
             {
                 return seat.Error;
@@ -33,14 +43,10 @@ public class CreateVenueHandler
             seats.Add(seat.Value);
         }
 
-        var venue = Venue.Create(request.Prefix, request.Name, request.SeatsLimit, seats);
-
-        // сохранение доменных моделей в базу данных
-
-        await _dbContext.Venues.AddAsync(venue.Value, cancellationToken);
+        venue.Value.AddSeats(seats);
         
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
+        await _venuesRepository.Add(venue.Value, cancellationToken);
+        
         return venue.Value.Id.Value;
     }
 }

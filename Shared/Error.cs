@@ -21,6 +21,7 @@ public record Error
         new(code, message, ErrorType.VALIDATION, invalidField: null);
     
     public static Error Failure(string code, string message) => new(code, message, ErrorType.FAILURE);
+    public static Error NotFound(string code, string message) => new(code, message, ErrorType.NOT_FOUND);
     
     public static Error Conflict(string code, string message) => new(code, message, ErrorType.CONFLICT);
     
