@@ -20,17 +20,17 @@ public class UpdateVenueNameByPrefixHandler
     
     public async Task<UnitResult<Error>> Handle(UpdateVenueNameByPrefixRequest request, CancellationToken cancellationToken)
     {
-        // var venueName = VenueName.CreateWithoutPerfix(request.Name);
-        // if (venueName.IsFailure)
-        // {
-        //     return venueName.Error;
-        // }
-        //
-        // var result = await _repository.UpdateVenueNameByPrefix(request.Prefix, venueName.Value, cancellationToken);
-        // if (result.IsFailure)
-        // {
-        //     return result.Error;
-        // }
+        var venueName = VenueName.CreateWithoutPerfix(request.Name);
+        if (venueName.IsFailure)
+        {
+            return venueName.Error;
+        }
+        
+        var result = await _repository.UpdateVenueNameByPrefix(request.Prefix, venueName.Value, cancellationToken);
+        if (result.IsFailure)
+        {
+            return result.Error;
+        }
 
         return UnitResult.Success<Error>();
     }

@@ -45,6 +45,20 @@ public class Venue
     
     public void AddSeats(IEnumerable<Seat> seats) => _seats.AddRange(seats);
 
+    public UnitResult<Error> UpdateSeats(IEnumerable<Seat> seats)
+    {
+        var SeatsList = seats.ToList();
+        
+        if (SeatsList.Count() > SeatsLimit)
+        {
+            return Error.Failure("venue.seats.limit", "There are too many seats" ) ;
+        }
+        
+        _seats = SeatsList;
+        
+        return UnitResult.Success<Error>();
+    } 
+
     public UnitResult<Error> UpdateName(string name)
     {
         var newVenueName = VenueName.Create(Name.Prefix, name);
@@ -62,7 +76,8 @@ public class Venue
     public static Result<Venue, Error> Create(
         string prefix,
         string name,
-        int seatsLimit
+        int seatsLimit,
+        VenueId? venueId = null
         )
     {
         if (seatsLimit <= 0)
@@ -88,6 +103,6 @@ public class Venue
         //     return Error.Validation("venue.seats.limit", "Seats limit must be greater than or equal to the number of seats");
         // }
         
-        return new Venue(new VenueId(Guid.NewGuid()), venueNameResult.Value, seatsLimit);
+        return new Venue(venueId ?? new VenueId(Guid.NewGuid()), venueNameResult.Value, seatsLimit);
     }
 }

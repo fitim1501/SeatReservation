@@ -4,6 +4,8 @@ using Npgsql;
 using SeatReservation.Application;
 using SeatReservation.Application.DataBase;
 using SeatReservation.Domain;
+using SeatReservation.Domain.Events;
+using SeatReservation.Domain.Reservations;
 using SeatReservation.Domain.Venues;
 
 namespace SeatReservation.Infrastructure.Postgre;
@@ -31,6 +33,9 @@ public class ReservationServiceDbContext : DbContext
     }
 
     public DbSet<Venue> Venues => Set<Venue>();
+    public DbSet<Seat> Seats => Set<Seat>();
+    public DbSet<Reservation> Reservation => Set<Reservation>();
+    public DbSet<Event> Event => Set<Event>();
     
     public DbSet<User> Users => Set<User>();
 

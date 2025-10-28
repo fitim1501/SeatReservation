@@ -10,11 +10,13 @@ namespace SeatReservation.Application.Venues;
 public class UpdateVenueNameHandler
 {
     private readonly IVenuesRepository _repository;
+    private readonly ITransactionManager _transactionManager;
     private readonly ILogger<UpdateVenueNameHandler> _logger;
 
-    public UpdateVenueNameHandler(IVenuesRepository  repository, ILogger<UpdateVenueNameHandler> logger)
+    public UpdateVenueNameHandler(IVenuesRepository  repository, ITransactionManager transactionManager, ILogger<UpdateVenueNameHandler> logger)
     {
         _repository = repository;
+        _transactionManager = transactionManager;
         _logger = logger;
     }
     
@@ -22,7 +24,7 @@ public class UpdateVenueNameHandler
     {
         var venueId = new VenueId(request.Id);
 
-        var (_, isFailure, venue, error) = await _repository.GeyById(venueId, cancellationToken);
+        var (_, isFailure, venue, error) = await _repository.GetById(venueId, cancellationToken);
         if (isFailure)
         {
             return error;
@@ -30,7 +32,7 @@ public class UpdateVenueNameHandler
 
         venue.UpdateName(request.Name);
 
-        await _repository.Save();
+        await _transactionManager.SaveChangeAsync(cancellationToken);
         
         return venueId.Value;
     }

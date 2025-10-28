@@ -42,4 +42,15 @@ public class VenuesController : ControllerBase
 
         return Ok();
     }
+    
+    [HttpPatch("/seats")]
+    public async Task<IActionResult> UpdateVenueSeats(
+        [FromServices] UpdateVenueSeatsHandler handler, 
+        [FromBody] UpdateVenueSeatsRequest request,
+        CancellationToken cancellationToken)
+    {
+        await handler.Handle(request, cancellationToken);
+
+        return Ok();
+    }
 }

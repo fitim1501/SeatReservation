@@ -24,6 +24,7 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
             .HasOne<Venue>()
             .WithMany()
             .HasForeignKey(e => e.VenueId)
+            .HasConstraintName("fk_event_venue")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -35,6 +36,12 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
         builder
             .Property(e => e.Info)
             .HasConversion(new EventInfoConverter());
+
+        builder.Property(e => e.Name).HasColumnName("name");
+        builder.Property(e => e.EventDate).HasColumnName("event_date");
+        builder.Property(e => e.StartDate).HasColumnName("start_date");
+        builder.Property(e => e.EndDate).HasColumnName("end_date");
+        builder.Property(e => e.Status).HasColumnName("status");
 
     }
 }
