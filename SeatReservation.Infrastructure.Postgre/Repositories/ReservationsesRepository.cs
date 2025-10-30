@@ -8,12 +8,12 @@ using Shared;
 
 namespace SeatReservation.Infrastructure.Postgre.Repositories;
 
-public class ReservationsRepository : IReservationRepository
+public class ReservationsesRepository : IReservationsRepository
 {
     private readonly ReservationServiceDbContext _dbContext;
-    private readonly ILogger<ReservationsRepository> _logger;
+    private readonly ILogger<ReservationsesRepository> _logger;
 
-    public ReservationsRepository(ReservationServiceDbContext dbContext, ILogger<ReservationsRepository> logger)
+    public ReservationsesRepository(ReservationServiceDbContext dbContext, ILogger<ReservationsesRepository> logger)
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -46,5 +46,18 @@ public class ReservationsRepository : IReservationRepository
             .AnyAsync(cancellationToken);
 
         return hasReservedSeats;
+    }
+
+    public async Task<int> GetReservedSeatsCount(Guid eventId, CancellationToken cancellationToken)
+    {
+        // await _dbContext.Database.ExecuteSqlAsync(
+        //     $"SELECT \"Capacity\" FROM event_details WHERE event_id = {eventId} FOR UPDATE", 
+        //     cancellationToken);
+        
+        return await _dbContext.Reservation
+            .Where(r => r.EventId == eventId)
+            .Where(r => r.Status == ReservationStatus.Confirmed || r.Status == ReservationStatus.Pending)
+            .SelectMany(r => r.ReservedSeats)
+            .CountAsync(cancellationToken);
     }
 }

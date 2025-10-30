@@ -15,16 +15,5 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
         builder.Property(v => v.Id)
             .HasConversion(v => v.Value, id => new ReservationId(id))
             .HasColumnName("id");
-
-        // builder
-        //     .HasMany(r => r.ReservedSeats)
-        //     .WithOne(rs => rs.Reservation)
-        //     .HasForeignKey("reservation_id")
-        //     .IsRequired()
-        //     .OnDelete(DeleteBehavior.Cascade);
-
-
-
-
     }
 }

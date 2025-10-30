@@ -20,27 +20,18 @@ public class EventRepository : IEventRepository
         _logger = logger;
     }
     
-    public async Task<Result<Event, Error>> GetById(EventId eventId, CancellationToken cancellationToken)
+    public async Task<Result<Event, Error>> GetByIdWithLock(EventId eventId, CancellationToken cancellationToken)
     {
-        var @event = await _dbContext.Event.FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
-        
+        var @event = await _dbContext.Event
+            .FromSql($"SELECT * FROM events WHERE id = {eventId.Value} FOR UPDATE")
+            .Include(e => e.Details)
+            .FirstOrDefaultAsync(cancellationToken);
+
         if (@event is null)
         {
-            return Error.NotFound("event.not.found", "Event not found");
+            return Error.Failure("event.notfound", $"Event with id {eventId.Value} not found");
         }
-
+        
         return @event;
     }   
-    public async Task<Result<Event, Error>> GetAvailableForReservationById(EventId eventId, CancellationToken cancellationToken)
-    {
-        var @event = await _dbContext.Event.FirstOrDefaultAsync(e => 
-            e.Id == eventId && e.StartDate > DateTime.UtcNow && e.Status == EventStatus.Planned, cancellationToken);
-        
-        if (@event is null)
-        {
-            return Error.NotFound("event.not.found", "Event not found");
-        }
-
-        return @event;
-    }
 }

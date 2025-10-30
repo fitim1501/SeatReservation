@@ -17,4 +17,13 @@ public class ReservationsController
     {
         return await handler.Handle(request, cancellationToken);
     }
+    
+    [HttpPost("/adjacent")]
+    public async Task<EndpointResult<Guid>> ReserveAdjacentSeats(
+        [FromBody] ReservedAdjacentSeatsRequest request,
+        [FromServices] ReserveAdjacentSeatsHandler handler, 
+        CancellationToken cancellationToken)
+    {
+        return await handler.Handle(request, cancellationToken);
+    }
 }

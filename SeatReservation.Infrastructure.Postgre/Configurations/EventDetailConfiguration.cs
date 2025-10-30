@@ -22,5 +22,16 @@ public class EventDetailConfiguration : IEntityTypeConfiguration<EventDetails>
             .HasForeignKey<EventDetails>(ed => ed.EventId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Property(v => v.Capacity)
+            .HasColumnName("capacity");
+        
+        builder.Property(v => v.Description)
+            .HasColumnName("description");
+
+        builder
+            .Property(b => b.Version)
+            .IsRowVersion();
+
     }
 }

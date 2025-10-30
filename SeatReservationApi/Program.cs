@@ -1,6 +1,9 @@
 using Microsoft.OpenApi.Models;
 using SeatReservation.Application;
 using SeatReservation.Application.DataBase;
+using SeatReservation.Application.Events;
+using SeatReservation.Application.Reservations;
+using SeatReservation.Application.Seats;
 using SeatReservation.Application.Venues;
 using SeatReservation.Infrastructure.Postgre;
 using SeatReservation.Infrastructure.Postgre.Database;
@@ -39,11 +42,16 @@ builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 
 // builder.Services.AddScoped<IVenuesRepository, NpgSqlVenuesRepository>();
 builder.Services.AddScoped<IVenuesRepository, VenuesRepository>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IReservationsRepository, ReservationsesRepository>();
+builder.Services.AddScoped<ISeatsRepository, SeatsRepository>();
 
 builder.Services.AddScoped<CreateVenueHandler>();
 builder.Services.AddScoped<UpdateVenueNameHandler>();
 builder.Services.AddScoped<UpdateVenueNameByPrefixHandler>();
 builder.Services.AddScoped<UpdateVenueSeatsHandler>();
+builder.Services.AddScoped<ReserverHandler>();
+builder.Services.AddScoped<ReserveAdjacentSeatsHandler>();
 
 var app = builder.Build();
 

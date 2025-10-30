@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components.Endpoints.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SeatReservation.Domain.Reservations;
@@ -31,7 +32,14 @@ public class ReservationSeatConfiguration : IEntityTypeConfiguration<Reservation
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(rs => rs.SeatId).HasColumnName("seat_id");
+        builder.Property(rs => rs.SeatId).HasColumnName("seat_id").IsRequired();
 
+        builder.Property(rs => rs.EventId).HasColumnName("event_id").IsRequired();
+
+        builder.HasIndex(rs => new
+        {
+            rs.SeatId, 
+            rs.EventId
+        }).IsUnique().HasDatabaseName("ux_reservation_seat_seat_event");
     }
 }
