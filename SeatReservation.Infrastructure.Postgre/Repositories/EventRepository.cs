@@ -33,5 +33,13 @@ public class EventRepository : IEventRepository
         }
         
         return @event;
-    }   
+    }
+    
+    public async Task<Event?> GetById(EventId eventId, CancellationToken cancellationToken)
+    {
+        return await _dbContext.Event
+            .Include(e => e.Details)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
+    }
 }
