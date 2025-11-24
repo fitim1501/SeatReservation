@@ -8,27 +8,27 @@ public static class SeedConstants
     /// <summary>
     /// Количество пользователей
     /// </summary>
-    public const int UsersCount = 1000;
+    public const int UsersCount = 300;
     
     /// <summary>
     /// Количество площадок (venues)
     /// </summary>
-    public const int VenuesCount = 1000;
+    public const int VenuesCount = 100;
     
     /// <summary>
     /// Среднее количество мест на площадку
     /// </summary>
-    public const int SeatsPerVenue = 500;
+    public const int SeatsPerVenue = 100;
     
     /// <summary>
     /// Количество событий
     /// </summary>
-    public const int EventsCount = 5000;
+    public const int EventsCount = 40;
     
     /// <summary>
     /// Количество бронирований
     /// </summary>
-    public const int ReservationsCount = 2000;
+    public const int ReservationsCount = 10;
     
     /// <summary>
     /// Минимальное количество мест в одном бронировании

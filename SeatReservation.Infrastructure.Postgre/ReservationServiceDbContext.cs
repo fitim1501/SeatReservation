@@ -10,7 +10,7 @@ using SeatReservation.Domain.Venues;
 
 namespace SeatReservation.Infrastructure.Postgre;
 
-public class ReservationServiceDbContext : DbContext
+public class ReservationServiceDbContext : DbContext, IReadDbContext
 {
     private readonly string _connectionString;
 
@@ -36,9 +36,15 @@ public class ReservationServiceDbContext : DbContext
     public DbSet<Seat> Seats => Set<Seat>();
     public DbSet<Reservation> Reservation => Set<Reservation>();
     public DbSet<ReservationSeat> ReservationSeats => Set<ReservationSeat>();
-    public DbSet<Event> Event => Set<Event>();
+    public DbSet<Event> Events => Set<Event>();
     
     public DbSet<User> Users => Set<User>();
+    
+    public IQueryable<Event> EventsRead => Set<Event>().AsQueryable().AsNoTracking();
+    public IQueryable<Venue> VenuesRead => Set<Venue>().AsQueryable().AsNoTracking();
+    public IQueryable<Seat> SeatsRead => Set<Seat>().AsQueryable().AsNoTracking();
+    public IQueryable<Reservation> ReservationsRead => Set<Reservation>().AsQueryable().AsNoTracking();
+    public IQueryable<ReservationSeat> ReservationSeatsRead => Set<ReservationSeat>().AsQueryable().AsNoTracking();
 
     private ILoggerFactory CreateLoggerFactory() =>
         LoggerFactory.Create(builder => { builder.AddConsole();});

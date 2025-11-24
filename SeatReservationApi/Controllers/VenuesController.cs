@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SeatReservation.Application;
 using SeatReservation.Application.Venues;
+using SeatReservation.Application.Venues.Commands;
 using SeatReservation.Contracts;
 using SeatReservation.Contracts.Venues;
 using SeatReservation.Domain.Venues;

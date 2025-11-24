@@ -1,12 +1,10 @@
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
-using SeatReservation.Application.DataBase;
-using SeatReservation.Contracts;
 using SeatReservation.Contracts.Venues;
 using SeatReservation.Domain.Venues;
 using Shared;
 
-namespace SeatReservation.Application.Venues;
+namespace SeatReservation.Application.Venues.Commands;
 
 public class UpdateVenueNameByPrefixHandler
 {

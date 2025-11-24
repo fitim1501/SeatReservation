@@ -353,7 +353,7 @@ public class ReservationSeeder : ISeeder
                 }
             }
 
-            await _context.Event.AddRangeAsync(batchEvents);
+            await _context.Events.AddRangeAsync(batchEvents);
             await _context.SaveChangesAsync();
             
             allEvents.AddRange(batchEvents);
@@ -373,7 +373,7 @@ public class ReservationSeeder : ISeeder
         var persistedSeats = await _context.Seats.AsNoTracking().ToListAsync();
         var seatsByVenue = persistedSeats.GroupBy(s => s.VenueId).ToDictionary(g => g.Key, g => g.ToList());
 
-        var persistedEvents = await _context.Event.AsNoTracking().ToListAsync();
+        var persistedEvents = await _context.Events.AsNoTracking().ToListAsync();
         var eventsById = persistedEvents.ToDictionary(e => e.Id.Value, e => e);
 
         // Отслеживаем забронированные места для каждого события (EventId -> HashSet<SeatId>)

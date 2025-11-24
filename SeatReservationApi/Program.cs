@@ -2,9 +2,12 @@ using Microsoft.OpenApi.Models;
 using SeatReservation.Application;
 using SeatReservation.Application.DataBase;
 using SeatReservation.Application.Events;
+using SeatReservation.Application.Events.Queries;
 using SeatReservation.Application.Reservations;
+using SeatReservation.Application.Reservations.Commands;
 using SeatReservation.Application.Seats;
 using SeatReservation.Application.Venues;
+using SeatReservation.Application.Venues.Commands;
 using SeatReservation.Infrastructure.Postgre;
 using SeatReservation.Infrastructure.Postgre.Database;
 using SeatReservation.Infrastructure.Postgre.Repositories;
@@ -38,7 +41,13 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ReservationServiceDbContext>(_ =>
     new ReservationServiceDbContext(builder.Configuration.GetConnectionString("ReservationServiceDb")!));
 
+builder.Services.AddScoped<IReadDbContext, ReservationServiceDbContext>(_ =>
+    new ReservationServiceDbContext(builder.Configuration.GetConnectionString("ReservationServiceDb")!));
+
 builder.Services.AddSingleton<IDbConnectionFactory, NpgsqlConnectionFactory>();
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
+
 builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 
 // builder.Services.AddScoped<IVenuesRepository, NpgSqlVenuesRepository>();
@@ -55,6 +64,7 @@ builder.Services.AddScoped<ReserverHandler>();
 builder.Services.AddScoped<ReserveAdjacentSeatsHandler>();
 
 builder.Services.AddScoped<GetEventByIdHandler>();
+builder.Services.AddScoped<GetEventByIdHandlerDapper>();
 
 builder.Services.AddScoped<ISeeder, ReservationSeeder>();
 
@@ -67,7 +77,7 @@ if (app.Environment.IsDevelopment())
 
     if (args.Contains("--seeding"))
     {
-        await app.Services.RunSeeding();
+       // await app.Services.RunSeeding();
     }
 }
 

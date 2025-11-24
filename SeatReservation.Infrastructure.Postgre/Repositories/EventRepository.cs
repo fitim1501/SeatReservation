@@ -22,24 +22,16 @@ public class EventRepository : IEventRepository
     
     public async Task<Result<Event, Error>> GetByIdWithLock(EventId eventId, CancellationToken cancellationToken)
     {
-        var @event = await _dbContext.Event
+        var @event = await _dbContext.Events
             .FromSql($"SELECT * FROM events WHERE id = {eventId.Value} FOR UPDATE")
             .Include(e => e.Details)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (@event is null)
         {
-            return Error.Failure("event.notfound", $"Event with id {eventId.Value} not found");
+            return Error.Failure("event.notfound", $"Events with id {eventId.Value} not found");
         }
         
         return @event;
-    }
-    
-    public async Task<Event?> GetById(EventId eventId, CancellationToken cancellationToken)
-    {
-        return await _dbContext.Event
-            .Include(e => e.Details)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(e => e.Id == eventId, cancellationToken);
     }
 }

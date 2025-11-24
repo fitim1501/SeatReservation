@@ -1,3 +1,3 @@
-namespace SeatReservation.Contracts.Venues;
+namespace SeatReservation.Contracts.Seats;
 
 public record UpdateSeatRequest(int RowNumber, int SeatNumber);

@@ -1,16 +1,14 @@
-using System.Data;
 using CSharpFunctionalExtensions;
 using SeatReservation.Application.DataBase;
 using SeatReservation.Application.Events;
 using SeatReservation.Application.Seats;
-using SeatReservation.Contracts;
 using SeatReservation.Contracts.Reservations;
 using SeatReservation.Domain.Events;
 using SeatReservation.Domain.Reservations;
 using SeatReservation.Domain.Venues;
 using Shared;
 
-namespace SeatReservation.Application.Reservations;
+namespace SeatReservation.Application.Reservations.Commands;
 
 public class ReserverHandler
 {
