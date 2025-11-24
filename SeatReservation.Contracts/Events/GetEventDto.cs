@@ -29,5 +29,5 @@ public record GetEventDto
 
     public string Info { get; init; } = null!;
     
-    public List<SeatDto> Seats { get; init; } = [];
+    public List<AvailableSeatDto> Seats { get; init; } = [];
 }

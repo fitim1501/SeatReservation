@@ -439,7 +439,7 @@ public class ReservationSeeder : ISeeder
                     continue;
 
                 var reservationResult = Reservation.Create(
-                    persistedEvent.Id.Value,
+                    persistedEvent.Id,
                     user.Id,
                     selectedSeats
                 );

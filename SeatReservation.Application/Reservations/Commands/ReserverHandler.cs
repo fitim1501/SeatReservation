@@ -48,7 +48,7 @@ public class ReserverHandler
             return error;
         }
         
-        var reservedSeatsCount = await _reservationsRepository.GetReservedSeatsCount(request.EventId, cancellationToken);
+        var reservedSeatsCount = await _reservationsRepository.GetReservedSeatsCount(new EventId(request.EventId), cancellationToken);
         
         if (@event.IsAvailableForReservation(reservedSeatsCount + request.SeatIds.Count()) == false)
         {
@@ -67,7 +67,7 @@ public class ReserverHandler
         }
         
         //Создать Reservation с ReservedSeats
-        var reservationResult = Reservation.Create(request.EventId, request.UserId, request.SeatIds);
+        var reservationResult = Reservation.Create(new EventId(request.EventId), request.UserId, request.SeatIds);
         if (reservationResult.IsFailure)
         {
             return reservationResult.Error;

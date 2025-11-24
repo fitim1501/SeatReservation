@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Endpoints.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SeatReservation.Domain.Events;
 using SeatReservation.Domain.Reservations;
 using SeatReservation.Domain.Venues;
 
@@ -32,9 +33,15 @@ public class ReservationSeatConfiguration : IEntityTypeConfiguration<Reservation
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(rs => rs.SeatId).HasColumnName("seat_id").IsRequired();
+        builder.Property(rs => rs.SeatId)
+            .HasConversion(r => r.Value, id => new SeatId(id))
+            .HasColumnName("seat_id")
+            .IsRequired();
 
-        builder.Property(rs => rs.EventId).HasColumnName("event_id").IsRequired();
+        builder.Property(rs => rs.EventId)
+            .HasColumnName("event_id")
+            .HasConversion(r => r.Value, id => new EventId(id))
+            .IsRequired();
 
         builder.HasIndex(rs => new
         {

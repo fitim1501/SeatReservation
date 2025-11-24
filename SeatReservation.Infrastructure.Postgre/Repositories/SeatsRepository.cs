@@ -23,7 +23,7 @@ public class SeatsRepository : ISeatsRepository
     {
         return await _dbContext.Seats.Where(s => seatIds.Contains(s.Id)).ToListAsync(cancellationToken);
     }
-
+    
     public async Task<IReadOnlyList<Seat>> GetAvailableSeats(
         VenueId venueId,
         Domain.Events.EventId eventId,
@@ -36,7 +36,7 @@ public class SeatsRepository : ISeatsRepository
             .Where(s => !_dbContext.ReservationSeats
                 .Any(rs => 
                     rs.SeatId == s.Id && 
-                    rs.EventId == eventId.Value &&
+                    rs.EventId == eventId &&
                     (rs.Reservation.Status == ReservationStatus.Confirmed ||
                      rs.Reservation.Status == ReservationStatus.Pending)
                 ))

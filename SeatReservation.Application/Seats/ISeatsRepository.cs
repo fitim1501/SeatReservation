@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using SeatReservation.Domain.Events;
 using SeatReservation.Domain.Venues;
 using Shared;
 
@@ -10,7 +11,7 @@ public interface ISeatsRepository
 
     Task<IReadOnlyList<Seat>> GetAvailableSeats(
         VenueId venueId,
-        Domain.Events.EventId eventId,
+        EventId eventId,
         int? rowNumber,
         CancellationToken cancellationToken);
 }

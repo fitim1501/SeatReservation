@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using SeatReservation.Domain.Events;
 using SeatReservation.Domain.Venues;
 using Shared;
 
@@ -16,7 +17,7 @@ public class Reservation
     
     private List<ReservationSeat> _reservedSeats;
     
-    public Reservation(ReservationId id, Guid eventId, Guid userId, IEnumerable<Guid> seatIds)
+    public Reservation(ReservationId id, EventId eventId, Guid userId, IEnumerable<Guid> seatIds)
     {
         Id = id;
         EventId = eventId;
@@ -32,7 +33,7 @@ public class Reservation
     }
     
     public ReservationId Id { get; private set; }
-    public Guid EventId { get; private set; }
+    public EventId EventId { get; private set; }
     public Guid UserId { get; private set; }
     public ReservationStatus Status { get; private set; }
     
@@ -41,11 +42,11 @@ public class Reservation
     public IReadOnlyList<ReservationSeat> ReservedSeats => _reservedSeats;
     
     public static Result<Reservation, Error> Create(
-        Guid eventId, 
+        EventId eventId, 
         Guid userId,
         IEnumerable<Guid> seatIds)
     {
-        if (eventId == Guid.Empty)
+        if (eventId.Value == Guid.Empty)
         {
             return Error.Validation("reservation.eventId", "Event id cannot be empty");
         }

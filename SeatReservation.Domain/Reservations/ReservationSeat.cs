@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using SeatReservation.Domain.Events;
 using SeatReservation.Domain.Venues;
 
 namespace SeatReservation.Domain.Reservations; 
@@ -10,7 +10,7 @@ public class ReservationSeat
     {
         
     } 
-    public ReservationSeat(ReservationSeatId id, Reservation reservation, SeatId seatId, Guid eventId)
+    public ReservationSeat(ReservationSeatId id, Reservation reservation, SeatId seatId, EventId eventId)
     {
         Id = id;
         Reservation = reservation;
@@ -24,7 +24,7 @@ public class ReservationSeat
     public Reservation Reservation { get; private set; }
     public SeatId SeatId { get; private set; }
     
-    public Guid EventId { get; private set; } 
+    public EventId EventId { get; private set; } 
     
     public DateTime ReservationDate { get; }
 }

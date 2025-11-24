@@ -5,6 +5,7 @@ using SeatReservation.Application.Reservations;
 using SeatReservation.Domain.Reservations;
 using SeatReservation.Domain.Venues;
 using Shared;
+using EventId = SeatReservation.Domain.Events.EventId;
 
 namespace SeatReservation.Infrastructure.Postgre.Repositories;
 
@@ -38,7 +39,7 @@ public class ReservationsesRepository : IReservationsRepository
         }
     }
     
-    public async Task<bool> AnySeatsAlreadyReserved(Guid eventId, IEnumerable<SeatId> seatIds, CancellationToken cancellationToken)
+    public async Task<bool> AnySeatsAlreadyReserved(EventId eventId, IEnumerable<SeatId> seatIds, CancellationToken cancellationToken)
     {
         var hasReservedSeats = await _dbContext.Reservation
             .Where(r => r.EventId == eventId)
@@ -48,7 +49,7 @@ public class ReservationsesRepository : IReservationsRepository
         return hasReservedSeats;
     }
 
-    public async Task<int> GetReservedSeatsCount(Guid eventId, CancellationToken cancellationToken)
+    public async Task<int> GetReservedSeatsCount(EventId eventId, CancellationToken cancellationToken)
     {
         // await _dbContext.Database.ExecuteSqlAsync(
         //     $"SELECT \"Capacity\" FROM event_details WHERE event_id = {eventId} FOR UPDATE", 

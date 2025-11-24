@@ -3,6 +3,7 @@ using SeatReservation.Application.DataBase;
 using SeatReservation.Application.Events;
 using SeatReservation.Application.Seats;
 using SeatReservation.Contracts.Reservations;
+using SeatReservation.Domain.Events;
 using SeatReservation.Domain.Reservations;
 using SeatReservation.Domain.Venues;
 using Shared;
@@ -77,12 +78,12 @@ public class ReserveAdjacentSeatsHandler
             return Error.Failure("reserveAdjacent.seats", "Not enough adjacent seats available");
         }
         
-        var seatIds = selectedSeats.Select(s => s.Id).ToList();
+        var seatIds = selectedSeats.Select(s => s.Id.Value).ToList();
         
         var reservationResult = Reservation.Create(
-            request.EventId,
+            new EventId(request.EventId),
             request.UserId,
-            seatIds.Select(id => id.Value).ToList());
+            seatIds.Select(id => id).ToList());
 
         if (reservationResult.IsFailure)
         {

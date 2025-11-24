@@ -20,10 +20,9 @@ public class GetEventByIdHandlerDapper
         
         GetEventDto? eventDto = null;
 
-        await connection.QueryAsync<GetEventDto, SeatDto, GetEventDto>(
+        await connection.QueryAsync<GetEventDto, AvailableSeatDto, GetEventDto>(
             """
-            SELECT  *,
-                    e.id,
+            SELECT  e.id,
                     e.venue_id,
                     e.name,
                     e.type,
@@ -34,15 +33,15 @@ public class GetEventByIdHandlerDapper
                     e."Info",
                     ed.capacity,
                     ed.description,
-                    
-                    
                     e.id,
                     e.venue_id,
                     s.row_number,
-                    s.seat_number
+                    s.seat_number,
+                    rs.id is null as is_available
             FROM events e
             JOIN event_details ed ON ed.event_id = e.id
             JOIN seats s ON e.venue_id = s.venue_id
+            LEFT JOIN reservation_seats rs ON s.id = seat_id AND e.id = e.id
             WHERE e.id = @eventId
             ORDER BY s.row_number, s.seat_number;
             """,

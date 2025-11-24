@@ -26,20 +26,20 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                     .Property(u => u.Link)
                     .IsRequired()
                     .HasMaxLength(LengthConstants.LENGTH500)
-                    .HasColumnName("link");
+                    .HasJsonPropertyName("link");
             
                 sb
                     .Property(u => u.Name)
                     .IsRequired()
                     .HasMaxLength(LengthConstants.LENGTH500)
-                    .HasColumnName("name");
+                    .HasJsonPropertyName("name");
             });
             
             db
                 .Property(u => u.Description)
                 .IsRequired()
                 .HasMaxLength(LengthConstants.LENGTH500)
-                .HasColumnName("description");
+                .HasJsonPropertyName("description");
         });
     }
 }

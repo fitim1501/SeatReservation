@@ -1,4 +1,4 @@
-using Microsoft.OpenApi.Models;
+// using Microsoft.OpenApi.Models;
 using SeatReservation.Application;
 using SeatReservation.Application.DataBase;
 using SeatReservation.Application.Events;
@@ -16,25 +16,27 @@ using Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi(options =>
-{
-    options.AddSchemaTransformer((schema, context, _) =>
-    {
-        if (context.JsonTypeInfo.Type == typeof(Envelope<Errors>))
-        {
-            if (schema.Properties.TryGetValue("errors", out var errorsProp))
-            {
-                errorsProp.Items.Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.Schema,
-                    Id = "Error"
-                };
-            }
-        }
-    
-        return Task.CompletedTask;
-    });
-});
+// builder.Services.AddOpenApi(options =>
+// {
+//     options.AddSchemaTransformer((schema, context, _) =>
+//     {
+//         if (context.JsonTypeInfo.Type == typeof(Envelope<Errors>))
+//         {
+//             if (schema.Properties.TryGetValue("errors", out var errorsProp))
+//             {
+//                 errorsProp.Items.Reference = new OpenApiReference
+//                 {
+//                     Type = ReferenceType.Schema,
+//                     Id = "Error"
+//                 };
+//             }
+//         }
+//     
+//         return Task.CompletedTask;
+//     });
+// });ъ
+
+builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
 
@@ -77,7 +79,7 @@ if (app.Environment.IsDevelopment())
 
     if (args.Contains("--seeding"))
     {
-       // await app.Services.RunSeeding();
+        //await app.Services.RunSeeding();
     }
 }
 
