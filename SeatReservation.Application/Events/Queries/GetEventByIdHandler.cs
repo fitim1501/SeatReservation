@@ -3,6 +3,7 @@ using SeatReservation.Application.DataBase;
 using SeatReservation.Contracts.Events;
 using SeatReservation.Contracts.Seats;
 using SeatReservation.Domain.Events;
+using SeatReservation.Domain.Reservations;
 
 namespace SeatReservation.Application.Events.Queries;
 
@@ -49,6 +50,13 @@ public class GetEventByIdHandler
                         VenueId = s.VenueId.Value,
                         IsAvailable = r == null
                     }).ToList()
+                ,
+                TotalSeats = _readDbContext.SeatsRead.Count(s => s.VenueId == @event.VenueId),
+                ReservedSeats = _readDbContext.ReservationSeatsRead.Count(rs => rs.EventId == @event.Id),
+                AvailableSeats = _readDbContext.SeatsRead.Count(s => s.VenueId == @event.VenueId) - 
+                                 _readDbContext.ReservationSeatsRead.Count(rs => rs.EventId == @event.Id  &&
+                                     (rs.Reservation.Status == ReservationStatus.Confirmed ||
+                                      rs.Reservation.Status == ReservationStatus.Cancelled))
             })
             .FirstOrDefaultAsync(cancellationToken);
     }

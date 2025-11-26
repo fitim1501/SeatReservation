@@ -18,6 +18,8 @@ public class EventsController : ControllerBase
         var @event = await handler.Handle(new GeEventByIdRequest(eventId), cancellationToken);
         return Ok(@event);
     }
+
+    
     
     [HttpGet("/{eventId:guid}/dapper")]
     public async Task<ActionResult<GetEventDto>> GetByIdDapper(
@@ -28,4 +30,23 @@ public class EventsController : ControllerBase
         var @event = await handler.Handle(new GeEventByIdRequest(eventId), cancellationToken);
         return Ok(@event);
     }
+    
+    [HttpGet]
+    public async Task<ActionResult<GetEventDto>> GetById(
+        [FromQuery] GetEventsRequest request,
+        [FromServices] GetEventsHandler handler,
+        CancellationToken cancellationToken)
+    {
+        var @events = await handler.Handle(request, cancellationToken);
+        return Ok(@events);
+    }
+    
+    // [HttpGet("/dapper")]
+    // public async Task<ActionResult<GetEventDto>> GetByIdDapper(
+    //     [FromServices] GetEventByIdHandlerDapper handler,
+    //     CancellationToken cancellationToken)
+    // {
+    //     var @event = await handler.Handle(new GeEventByIdRequest(eventId), cancellationToken);
+    //     return Ok(@event);
+    // }
 }
