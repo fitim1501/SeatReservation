@@ -20,5 +20,10 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
         builder.Property(v => v.EventId)
             .HasConversion(v => v.Value, id => new EventId(id))
             .HasColumnName("event_id");
+        
+        builder
+            .Property(e => e.Status)
+            .HasConversion<string>()
+            .HasColumnName("status");
     }
 }

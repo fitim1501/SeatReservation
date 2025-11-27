@@ -1,3 +1,5 @@
+using System.Data;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using SeatReservation.Application.DataBase;
 using SeatReservation.Contracts.Events;
@@ -54,7 +56,7 @@ public class GetEventsHandler
         
 
         eventsQuery = eventsQuery
-            .OrderBy(e => e.EventDate);
+            .OrderByDescending(e => e.EventDate);
         
         var totalCount = await eventsQuery.LongCountAsync(cancellationToken);
             
@@ -86,5 +88,145 @@ public class GetEventsHandler
             .ToListAsync(cancellationToken);
 
         return new GetEventsDto(events, totalCount);
+    }
+}
+
+public class GetEventsHandlerDapper
+{
+    private readonly IDbConnectionFactory _connectionFactory;
+
+    public GetEventsHandlerDapper(IDbConnectionFactory connectionFactory)
+    {
+        _connectionFactory = connectionFactory;
+    }
+
+    public async Task<GetEventsDto> Handle(GetEventsRequest query, CancellationToken cancellationToken)
+    {
+        var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);
+
+        var parameters = new DynamicParameters();
+        
+        // parameters.Add("search", query.Search, DbType.String);
+        // parameters.Add("type", query.EventType, DbType.String);
+        // parameters.Add("date_from", query.DateFrom?.ToUniversalTime(), DbType.DateTime);
+        // parameters.Add("date_to", query.DateTo?.ToUniversalTime(), DbType.DateTime);
+        // parameters.Add("status", query.Status, DbType.String);
+        // parameters.Add("venue_id", query.VenueId, DbType.Guid);
+        // parameters.Add("min_available_seats", query.MinAvailableSeats, DbType.Int32);
+        //
+        // parameters.Add("offset", (query.Pagination.Page - 1) * query.Pagination.PageSize, DbType.Int32);
+        // parameters.Add("page_size", query.Pagination.PageSize, DbType.Int32);
+
+        var conditions = new List<string>();
+        
+        if (!string.IsNullOrWhiteSpace(query.Search))
+        {
+            conditions.Add("e.name ILIKE @search");
+            parameters.Add("search", $"%{query.Search}%");
+        }
+        
+        if (!string.IsNullOrWhiteSpace(query.Status))
+        {
+            conditions.Add("e.status = @status");
+            parameters.Add("status", query.Status);
+        }
+        
+        if (!string.IsNullOrWhiteSpace(query.EventType))
+        {
+            conditions.Add("e.type = @event_type");
+            parameters.Add("event_type", query.EventType);
+        }
+        
+        if (query.DateFrom.HasValue)
+        {
+            conditions.Add("e.event_date >= @date_from");
+            parameters.Add("date_from", query.DateFrom?.ToUniversalTime());
+        }
+        
+        if (query.DateTo.HasValue)
+        {
+            conditions.Add("e.event_date <= @date_to");
+            parameters.Add("date_to", query.DateTo?.ToUniversalTime());
+        }
+        
+        if (query.VenueId.HasValue)
+        {
+            conditions.Add("e.venue_id = @venue_id");
+            parameters.Add("venue_id", query.VenueId);
+        }
+        
+        if (query.MinAvailableSeats.HasValue)
+        {
+            conditions.Add(
+                """
+                    ((select count(*) from seats s where s.venue_id = e.venue_id) -
+                        coalesce((select count(*)
+                                  from reservation_seats rs
+                                           join reservations r on rs.reservation_id = r.id
+                                  where r.event_id = e.id
+                                    and r.status in ('Confirmed', 'Pending')), 0)) >= @min_available_seats
+                """);
+            parameters.Add("min_available_seats", query.MinAvailableSeats);
+        }
+        
+        parameters.Add("offset", (query.Pagination.Page - 1) * query.Pagination.PageSize);
+        parameters.Add("page_size", query.Pagination.PageSize);
+        
+        var whereClause = conditions.Count > 0
+            ? "WHERE " + string.Join(" AND ", conditions)
+            : string.Empty;
+        
+        long? totalCount = null;
+
+        var events = await connection.QueryAsync<EventDto, long, EventDto>(
+            $"""
+             SELECT e.id,
+                    e.venue_id,
+                    e.name,
+                    e.type,
+                    e.event_date,
+                    e.start_date,
+                    e.end_date,
+                    e.status,
+                    e."Info",
+                    ed.capacity,
+                    ed.description,
+                    (select count(*)
+                     from seats s
+                     where s.venue_id = e.venue_id)                                                as total_seats,
+                    (select count(*)
+                     from reservation_seats rs
+                              join reservations r on rs.reservation_id = r.id
+                     where r."event_id" = e.id
+                       and r.status in ('Confirmed', 'Pending'))                                   as reserved_count,
+
+                    (select count(*)
+                     from seats s
+                     where s.venue_id = e.venue_id) - (select count(*)
+                                                       from reservation_seats rs
+                                                                join reservations r on rs.reservation_id = r.id
+                                                       where r.event_id = e.id
+                                                         and r.status in ('Confirmed', 'Pending')) as available_seats,
+                     count(*) over() as total_count
+
+             FROM events e
+                      JOIN event_details ed ON ed.event_id = e.id
+             {whereClause}
+             ORDER BY e.event_date DESC
+             LIMIT @page_size OFFSET @offset;
+             """,
+            splitOn: "total_count",
+                map: (e, total) =>
+                {
+                    if (totalCount == null)
+                    {
+                        totalCount = total;
+                    }
+    
+                    return e;
+                },
+            param: parameters);
+
+        return new  GetEventsDto(events.ToList(), totalCount ?? 0);
     }
 }

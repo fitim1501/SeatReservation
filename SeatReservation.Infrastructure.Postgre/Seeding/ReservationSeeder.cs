@@ -272,10 +272,18 @@ public class ReservationSeeder : ISeeder
         _logger.LogInformation("Seeding {Count} events...", SeedConstants.EventsCount);
         
         var allEvents = new List<Event>();
-        var eventNames = new[] { "Концерт", "Конференция", "Вебинар", "Мастер-класс", "Лекция", "Презентация", "Встреча", "Семинар" };
-        var performers = new[] { "Группа А", "Группа Б", "Солист В", "Оркестр Г", "Ансамбль Д" };
-        var speakers = new[] { "Иванов И.И.", "Петров П.П.", "Сидоров С.С.", "Смирнов С.М.", "Кузнецов К.К." };
-        var topics = new[] { "Разработка ПО", "Архитектура систем", "DevOps практики", "Agile методологии", "Machine Learning" };
+        
+        // Разнообразные названия для концертов
+        var concertNames = new[] { "Рок-концерт", "Поп-концерт", "Джазовый вечер", "Симфонический концерт", "Акустический концерт", "Фестиваль", "Музыкальное шоу" };
+        var performers = new[] { "Группа Ария", "Сплин", "ДДТ", "Би-2", "Мумий Тролль", "Земфира", "Oxxxymiron", "Филармонический оркестр", "Джазовый квартет", "Симфонический оркестр", "Рок-группа Пикник", "Ленинград" };
+        
+        // Разнообразные названия для конференций
+        var conferenceNames = new[] { "Tech-конференция", "IT-форум", "Бизнес-конференция", "Научная конференция", "Образовательный форум", "Хакатон", "Meetup разработчиков", "Саммит предпринимателей" };
+        var speakers = new[] { "Иванов И.И.", "Петров П.П.", "Сидоров С.С.", "Смирнов С.М.", "Кузнецов К.К.", "Васильева А.А.", "Соколов Д.В.", "Михайлова Е.П.", "Новиков В.А.", "Федоров С.И." };
+        var topics = new[] { "Разработка ПО", "Архитектура систем", "DevOps практики", "Agile методологии", "Machine Learning", "Искусственный интеллект", "Blockchain технологии", "Кибербезопасность", "Cloud Computing", "Микросервисная архитектура", "Data Science", "IoT решения" };
+        
+        // Разнообразные названия для онлайн-событий
+        var onlineNames = new[] { "Онлайн-вебинар", "Прямой эфир", "Стрим", "Виртуальная встреча", "Дистанционный курс", "Онлайн-семинар", "Видеоконференция", "Live-сессия" };
 
         var totalBatches = (int)Math.Ceiling((double)SeedConstants.EventsCount / SeedConstants.BatchSize);
         
@@ -288,12 +296,10 @@ public class ReservationSeeder : ISeeder
             {
                 var globalIndex = batchIndex * SeedConstants.BatchSize + i;
                 var venue = venues[_random.Next(venues.Count)];
-                var eventName = $"{eventNames[_random.Next(eventNames.Length)]} #{globalIndex + 1}";
                 var eventDate = DateTime.UtcNow.AddDays(_random.Next(1, 180));
                 var startDate = eventDate.AddHours(-2);
                 var endDate = eventDate.AddHours(4);
                 var capacity = _random.Next(50, venue.SeatsLimit);
-                var description = $"Описание события {eventName}. Место проведения: {venue.Name}. Вместимость: {capacity} человек.";
 
                 Event? eventEntity = null;
                 var eventType = _random.Next(3);
@@ -301,45 +307,57 @@ public class ReservationSeeder : ISeeder
                 switch (eventType)
                 {
                     case 0: // Concert
+                        var concertName = $"{concertNames[_random.Next(concertNames.Length)]} #{globalIndex + 1}";
+                        var performer = performers[_random.Next(performers.Length)];
+                        var concertDescription = $"Приглашаем на {concertName}! Выступает: {performer}. Место проведения: {venue.Name}. Вместимость: {capacity} человек.";
+                        
                         var concertResult = Event.CreateConcert(
                             venue.Id,
-                            eventName,
+                            concertName,
                             eventDate,
                             startDate,
                             endDate,
                             capacity,
-                            description,
-                            performers[_random.Next(performers.Length)]
+                            concertDescription,
+                            performer
                         );
                         if (concertResult.IsSuccess)
                             eventEntity = concertResult.Value;
                         break;
 
                     case 1: // Conference
+                        var conferenceName = $"{conferenceNames[_random.Next(conferenceNames.Length)]} #{globalIndex + 1}";
+                        var speaker = speakers[_random.Next(speakers.Length)];
+                        var topic = topics[_random.Next(topics.Length)];
+                        var conferenceDescription = $"Приглашаем на {conferenceName}! Спикер: {speaker}. Тема: {topic}. Место проведения: {venue.Name}. Вместимость: {capacity} человек.";
+                        
                         var conferenceResult = Event.CreateConference(
                             venue.Id,
-                            eventName,
+                            conferenceName,
                             eventDate,
                             startDate,
                             endDate,
                             capacity,
-                            description,
-                            speakers[_random.Next(speakers.Length)],
-                            topics[_random.Next(topics.Length)]
+                            conferenceDescription,
+                            speaker,
+                            topic
                         );
                         if (conferenceResult.IsSuccess)
                             eventEntity = conferenceResult.Value;
                         break;
 
                     case 2: // Online
+                        var onlineName = $"{onlineNames[_random.Next(onlineNames.Length)]} #{globalIndex + 1}";
+                        var onlineDescription = $"Присоединяйтесь к {onlineName} онлайн! Место проведения: {venue.Name}. Вместимость: {capacity} человек.";
+                        
                         var onlineResult = Event.CreateOnline(
                             venue.Id,
-                            eventName,
+                            onlineName,
                             eventDate,
                             startDate,
                             endDate,
                             capacity,
-                            description,
+                            onlineDescription,
                             $"https://stream.example.com/event{globalIndex + 1}"
                         );
                         if (onlineResult.IsSuccess)
@@ -470,6 +488,37 @@ public class ReservationSeeder : ISeeder
                 // Очищаем ChangeTracker для освобождения памяти
                 _context.ChangeTracker.Clear();
             }
+        }
+        
+        // После создания всех резерваций — распределим статусы по ним, чтобы в сидировании использовались все возможные статусы
+        var allStatuses = new[] { "Pending", "Confirmed", "Cancelled" };
+
+        var persistedReservations = await _context.Reservation.AsNoTracking().ToListAsync();
+        if (persistedReservations.Count > 0)
+        {
+            _logger.LogInformation("Assigning statuses to {Count} reservations...", persistedReservations.Count);
+
+            // Получаем список id резерваций и перемешиваем
+            var reservationIds = persistedReservations.Select(r => r.Id.Value).OrderBy(_ => _random.Next()).ToList();
+
+            // Создаём список обновлений — случайные статусы
+            var updates = reservationIds
+                .Select(id => (Id: id, Status: allStatuses[_random.Next(allStatuses.Length)]))
+                .ToList();
+
+            // Обеспечиваем, чтобы каждый статус использовался хотя бы один раз (если резерваций >= кол-ва статусов)
+            for (int s = 0; s < allStatuses.Length && s < updates.Count; s++)
+            {
+                updates[s] = (updates[s].Id, allStatuses[s]);
+            }
+
+            // Применяем обновления (одним запросом на запись на каждую запись) - параметризованно
+            foreach (var (id, status) in updates)
+            {
+                await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE \"reservations\" SET \"status\" = {status} WHERE \"id\" = {id};");
+            }
+
+            _logger.LogInformation("Statuses assigned to reservations");
         }
         
         _logger.LogInformation("Successfully created {Count} reservations", totalCreated);

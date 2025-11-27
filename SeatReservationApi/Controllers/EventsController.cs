@@ -32,7 +32,7 @@ public class EventsController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<GetEventDto>> GetById(
+    public async Task<ActionResult<GetEventDto>> Get(
         [FromQuery] GetEventsRequest request,
         [FromServices] GetEventsHandler handler,
         CancellationToken cancellationToken)
@@ -41,12 +41,13 @@ public class EventsController : ControllerBase
         return Ok(@events);
     }
     
-    // [HttpGet("/dapper")]
-    // public async Task<ActionResult<GetEventDto>> GetByIdDapper(
-    //     [FromServices] GetEventByIdHandlerDapper handler,
-    //     CancellationToken cancellationToken)
-    // {
-    //     var @event = await handler.Handle(new GeEventByIdRequest(eventId), cancellationToken);
-    //     return Ok(@event);
-    // }
+    [HttpGet("dapper")]
+    public async Task<ActionResult<GetEventDto>> GetDapper(
+        [FromQuery] GetEventsRequest request,
+        [FromServices] GetEventsHandlerDapper handler,
+        CancellationToken cancellationToken)
+    {
+        var @events = await handler.Handle(request, cancellationToken);
+        return Ok(@events);
+    }
 }
