@@ -8,7 +8,9 @@ public record GetEventsRequest(
     string? Status,
     Guid? VenueId,
     int? MinAvailableSeats,
-    PaginationRequest Pagination
+    PaginationRequest Pagination,
+    string? SortBy = "date",
+    string? SortDirection = "asc"
    );
     
     public record PaginationRequest(int Page = 1, int PageSize = 20);
