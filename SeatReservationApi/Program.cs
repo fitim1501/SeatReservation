@@ -1,6 +1,9 @@
 // using Microsoft.OpenApi.Models;
 using SeatReservation.Application;
 using SeatReservation.Application.DataBase;
+using SeatReservation.Application.Departments;
+using SeatReservation.Application.Departments.Command;
+using SeatReservation.Application.Departments.Queries;
 using SeatReservation.Application.Events;
 using SeatReservation.Application.Events.Queries;
 using SeatReservation.Application.Reservations;
@@ -57,6 +60,7 @@ builder.Services.AddScoped<IVenuesRepository, VenuesRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IReservationsRepository, ReservationsesRepository>();
 builder.Services.AddScoped<ISeatsRepository, SeatsRepository>();
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
 builder.Services.AddScoped<CreateVenueHandler>();
 builder.Services.AddScoped<UpdateVenueNameHandler>();
@@ -64,11 +68,13 @@ builder.Services.AddScoped<UpdateVenueNameByPrefixHandler>();
 builder.Services.AddScoped<UpdateVenueSeatsHandler>();
 builder.Services.AddScoped<ReserverHandler>();
 builder.Services.AddScoped<ReserveAdjacentSeatsHandler>();
+builder.Services.AddScoped<CreateDepartmentHandler>();
 
 builder.Services.AddScoped<GetEventByIdHandler>();
 builder.Services.AddScoped<GetEventByIdHandlerDapper>();
 builder.Services.AddScoped<GetEventsHandler>();
 builder.Services.AddScoped<GetEventsHandlerDapper>();
+builder.Services.AddScoped<GetDepartmentsHandler>();
 
 builder.Services.AddScoped<ISeeder, ReservationSeeder>();
 

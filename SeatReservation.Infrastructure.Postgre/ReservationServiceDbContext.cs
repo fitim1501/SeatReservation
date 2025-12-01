@@ -4,6 +4,7 @@ using Npgsql;
 using SeatReservation.Application;
 using SeatReservation.Application.DataBase;
 using SeatReservation.Domain;
+using SeatReservation.Domain.Departments;
 using SeatReservation.Domain.Events;
 using SeatReservation.Domain.Reservations;
 using SeatReservation.Domain.Venues;
@@ -38,6 +39,8 @@ public class ReservationServiceDbContext : DbContext, IReadDbContext
     public DbSet<ReservationSeat> ReservationSeats => Set<ReservationSeat>();
     public DbSet<Event> Events => Set<Event>();
     
+    public DbSet<Department> Departments => Set<Department>();
+    
     public DbSet<User> Users => Set<User>();
     
     public IQueryable<Event> EventsRead => Set<Event>().AsQueryable().AsNoTracking();
@@ -45,6 +48,7 @@ public class ReservationServiceDbContext : DbContext, IReadDbContext
     public IQueryable<Seat> SeatsRead => Set<Seat>().AsQueryable().AsNoTracking();
     public IQueryable<Reservation> ReservationsRead => Set<Reservation>().AsQueryable().AsNoTracking();
     public IQueryable<ReservationSeat> ReservationSeatsRead => Set<ReservationSeat>().AsQueryable().AsNoTracking();
+    public IQueryable<Department> DepartmentsRead => Set<Department>().AsQueryable().AsNoTracking();
 
     private ILoggerFactory CreateLoggerFactory() =>
         LoggerFactory.Create(builder => { builder.AddConsole();});

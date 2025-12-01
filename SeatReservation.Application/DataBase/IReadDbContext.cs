@@ -1,3 +1,4 @@
+using SeatReservation.Domain.Departments;
 using SeatReservation.Domain.Events;
 using SeatReservation.Domain.Reservations;
 using SeatReservation.Domain.Venues;
@@ -11,4 +12,5 @@ public interface IReadDbContext
     public IQueryable<Seat> SeatsRead { get; }
     public IQueryable<Reservation> ReservationsRead { get; }
     public IQueryable<ReservationSeat> ReservationSeatsRead { get; }
+    public IQueryable<Department> DepartmentsRead { get; }
 }
