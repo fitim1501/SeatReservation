@@ -75,6 +75,7 @@ builder.Services.AddScoped<GetEventByIdHandlerDapper>();
 builder.Services.AddScoped<GetEventsHandler>();
 builder.Services.AddScoped<GetEventsHandlerDapper>();
 builder.Services.AddScoped<GetDepartmentsHandler>();
+builder.Services.AddScoped<GetDepartmentLtreeHandler>();
 
 builder.Services.AddScoped<ISeeder, ReservationSeeder>();
 

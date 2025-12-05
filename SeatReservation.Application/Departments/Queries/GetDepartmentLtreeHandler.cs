@@ -1,38 +1,29 @@
-using System.Data;
 using Dapper;
 using SeatReservation.Application.DataBase;
 using SeatReservation.Contracts.Departments;
 
 namespace SeatReservation.Application.Departments.Queries;
 
-public class GetDepartmentsHandler
+public class GetDepartmentLtreeHandler
 {
     private readonly IDbConnectionFactory _connectionFactory;
 
-    public GetDepartmentsHandler(IDbConnectionFactory connectionFactory)
+    public GetDepartmentLtreeHandler(IDbConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
     }
 
     public async Task<List<DepartmentDto>> Handle(CancellationToken cancellationToken)
     {
-        var recursiveRotts = await GetHierarchyRecursiveAsync("head-office", cancellationToken);
+        var recursiveRotts = await GetHierarchyLtreeAsync("head-office.hr", cancellationToken);
         
         return recursiveRotts;
     }
-
-    private async Task<List<DepartmentDto>> GetHierarchyRecursiveAsync(string rootPath, CancellationToken cancellationToken)
+    
+    private async Task<List<DepartmentDto>> GetHierarchyLtreeAsync(string rootPath, CancellationToken cancellationToken)
     {
         const string dapperSql = """
-                                 with recursive dept_tree as (
-                                     select d.*, 0 as level
-                                     from departments d
-                                     where d.path = @rootPath::ltree
-                                     union all
-                                     select c.*, dt.level + 1 as level
-                                     from departments c
-                                     join dept_tree dt on c.parent_id = dt.id)
-                                 select id,
+                                    select id,
                                         parent_id,
                                         name,
                                         identifier,
@@ -40,10 +31,14 @@ public class GetDepartmentsHandler
                                         depth,
                                         is_active,
                                         created_at,
-                                        updated_at,
-                                        level
-                                     from dept_tree
-                                     order by level, id
+                                        updated_at
+                                    from departments
+                                    --where path <@ @rootPath::ltree
+                                    --where subpath(path, 0, nlevel(path)-1) = subpath(@rootPath::ltree, 0, nlevel(@rootPath::ltree)-1) and path != @rootPath::ltree
+                                    where path <@ @rootPath::ltree
+                                     and nlevel(path) > nlevel(@rootPath::ltree)
+                                     and nlevel(path) <= nlevel(@rootPath::ltree) + 3
+                                    order by depth
                                  """;
 
         var connection = await _connectionFactory.CreateConnectionAsync(cancellationToken);

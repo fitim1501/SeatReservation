@@ -1,4 +1,4 @@
-namespace SeatReservation.Application.Departments.Queries;
+namespace SeatReservation.Contracts.Departments;
 
 public record DepartmentDto
 {

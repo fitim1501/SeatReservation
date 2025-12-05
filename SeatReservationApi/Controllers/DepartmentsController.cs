@@ -26,7 +26,14 @@ public class DepartmentsController : ControllerBase
         [FromServices] GetDepartmentsHandler handler,
         CancellationToken cancellationToken)
     {
-        await handler.Handle(cancellationToken);
-        return Ok();
+        return Ok(await handler.Handle(cancellationToken));
+    }
+    
+    [HttpGet("ltree")]
+    public async Task<ActionResult> GetByLtree(
+        [FromServices] GetDepartmentLtreeHandler handler,
+        CancellationToken cancellationToken)
+    {
+        return Ok(await handler.Handle(cancellationToken));
     }
 }

@@ -50,6 +50,8 @@ public class DepartmentConfiguration: IEntityTypeConfiguration<Department>
                 value => value.Value,
                 value => Path.Create(value));
 
+        builder.HasIndex(x => x.Path).HasMethod("gist").HasDatabaseName("idx_departments_path");
+
         builder.Property(d => d.Depth)
             .IsRequired()
             .HasColumnName("depth");
