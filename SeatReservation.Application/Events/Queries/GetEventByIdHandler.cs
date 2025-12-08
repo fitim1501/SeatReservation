@@ -36,8 +36,18 @@ public class GetEventByIdHandler
                 Info = @event.Info.ToString(),
                 Seats = (from s in _readDbContext.SeatsRead
                     where s.VenueId == @event.VenueId
-                    join rs in _readDbContext.ReservationSeatsRead on new { SeatId = s.Id, EventId = @event.Id } equals new
-                            { SeatId = rs.SeatId, EventId = rs.EventId }
+                    join rs in _readDbContext.ReservationSeatsRead 
+                        on new
+                        {
+                            SeatId = s.Id, 
+                            EventId = @event.Id 
+                            
+                        } equals new
+                        {
+                            SeatId = rs.SeatId, 
+                            EventId = rs.EventId 
+                            
+                        }
                         into reservations
                     from r in reservations.DefaultIfEmpty()
                     where @event.Id == new EventId(query.EventId)

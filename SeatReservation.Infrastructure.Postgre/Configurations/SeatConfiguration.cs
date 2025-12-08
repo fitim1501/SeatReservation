@@ -27,5 +27,12 @@ public class SeatConfiguration : IEntityTypeConfiguration<Seat>
             .HasColumnName("seat_number");
 
         // builder.Property(v => v.VenueId).HasColumnName("venue_id");
+
+        builder.HasIndex(s => new
+        {
+            s.VenueId, 
+            s.RowNumber, 
+            s.SeatNumber
+        });
     }
 }

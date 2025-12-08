@@ -44,7 +44,7 @@ public class GetEventByIdHandlerDapper
             FROM events e
             JOIN event_details ed ON ed.event_id = e.id
             JOIN seats s ON e.venue_id = s.venue_id
-            LEFT JOIN reservation_seats rs ON s.id = seat_id AND e.id = e.id
+            LEFT JOIN reservation_seats rs ON s.id = seat_id AND rs.event_id = e.id
             WHERE e.id = @eventId
             ORDER BY s.row_number, s.seat_number;
             """,

@@ -48,5 +48,11 @@ public class ReservationSeatConfiguration : IEntityTypeConfiguration<Reservation
             rs.SeatId, 
             rs.EventId
         }).IsUnique().HasDatabaseName("ux_reservation_seat_seat_event");
+
+        builder.HasIndex(rs => new
+        {
+            rs.EventId,
+            rs.Reservation
+        });
     }
 }

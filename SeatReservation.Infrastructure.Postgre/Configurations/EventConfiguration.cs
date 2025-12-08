@@ -46,5 +46,14 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
             .HasConversion<string>()
             .HasColumnName("status");
 
+        builder.HasIndex(e => e.StartDate);
+        
+        builder.HasIndex(e => e.EndDate);
+        builder.HasIndex(e => e.EventDate);
+
+        builder.HasIndex(e => e.Name)
+            .HasDatabaseName("ix_events_name_trgm")
+            .HasMethod("gin")
+            .HasOperators("gin_trgm_ops");
     }
 }

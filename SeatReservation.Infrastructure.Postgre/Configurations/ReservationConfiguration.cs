@@ -25,5 +25,11 @@ public class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
             .Property(e => e.Status)
             .HasConversion<string>()
             .HasColumnName("status");
+        
+        builder.HasIndex(r => new
+        {
+            r.EventId,
+            r.Status
+        }).HasFilter("status in ('Confirmed', 'Pending')");
     }
 }
